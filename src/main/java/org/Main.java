@@ -31,15 +31,11 @@ public class Main {
 
         removerAlunoTurma.setOnAction(e -> {
             String turmaChave = removerAlunoTurma.getValue();
-            selecionarAlunoTurma.getItems().clear();
-            if (turmaChave != null) {
-                Turma turma = TurmaGerenciador.getInstancia().getTurma(
-                        turmaChave.split(" \\| ")[1],
-                        turmaChave.split(" \\| ")[2],
-                        turmaChave.split(" \\| ")[3]
-                );
+            String[] partes = turmaChave.split(" \\| ");
+            if (partes.length >= 4) {
+                Turma turma = TurmaGerenciador.getInstancia().getTurma(partes[1], partes[2], partes[3]);
                 if (turma != null) {
-                    selecionarAlunoTurma.getItems().addAll(turma.getAlunos());
+                    selecionarAlunoTurma.getItems().setAll(turma.getAlunos());
                 }
             }
         });
@@ -99,15 +95,16 @@ public class Main {
         boolean sucesso = TurmaGerenciador.getInstancia().cadastrarTurma(nome, dia, horario, piscina);
 
         if (sucesso) {
-            console.appendText("\nTurma cadastrada:\n");
-            console.appendText("Nome: " + nome
-                    + " | Dia(s): " + dia
-                    + " | Horário: " + horario
-                    + " | Piscina: " + piscina + "\n");
+            Turma turmaCriada = TurmaGerenciador.getInstancia().getTurma(dia, horario, piscina);
 
-            String chave = nome + " | " + dia + " | " + horario + " | " + piscina;
-            if (!listaTurmas.contains(chave)){
-                listaTurmas.add(chave);
+            if (turmaCriada != null) {
+                console.appendText("\nTurma cadastrada:\n");
+                console.appendText(turmaCriada + "\n");
+
+                String chave = turmaCriada.gerarChaveCompleta();
+                if (!listaTurmas.contains(chave)) {
+                    listaTurmas.add(chave);
+                }
             }
 
             nomeTurma.clear();
@@ -121,15 +118,11 @@ public class Main {
 
     }
 
-
     @FXML
     private void listarTurmas() {
         console.appendText("\n=== Turmas ===\n");
         for (Turma turma : TurmaGerenciador.getInstancia().getTurmas().values()) {
-            console.appendText("Nome: " + turma.getNome()
-                    + " | Dia(s): " + turma.getDia()
-                    + " | Horário: " + turma.getHorario()
-                    + " | Piscina: " + turma.getPiscina().getNome() + "\n");
+            console.appendText(turma.toString() + "\n");
         }
     }
 
@@ -138,27 +131,26 @@ public class Main {
         String aluno = nomeAluno.getText().trim();
         String turmaChave = selecionarTurmaAluno.getValue();
 
-        if (aluno.isEmpty() || turmaChave == null){
+        if (aluno.isEmpty() || turmaChave == null) {
             console.appendText("\nPreencha todos os campos!\n");
             return;
         }
 
-        Turma turma = TurmaGerenciador.getInstancia().getTurma(
-                turmaChave.split(" \\| ")[1],
-                turmaChave.split(" \\| ")[2],
-                turmaChave.split(" \\| ")[3]
-        );
+        String[] partes = turmaChave.split(" \\| ");
 
-        if (turma != null) {
-            String resultado = turma.adicionarAluno(aluno);
-            if (resultado.equals("deu certo")) {
-                console.appendText("\nAluno cadastrado!\n");
-                nomeAluno.clear();
-            } else {
-                console.appendText("\n" + resultado + "\n");
+        if (partes.length >= 4) {
+            Turma turma = TurmaGerenciador.getInstancia().getTurma(partes[1], partes[2], partes[3]);
+
+            if (turma != null) {
+                String resultado = turma.adicionarAluno(aluno);
+                if (resultado.equals("deu certo")) {
+                    console.appendText("\nAluno cadastrado!\n");
+                    nomeAluno.clear();
+                } else {
+                    console.appendText("\n" + resultado + "\n");
+                }
             }
         }
-
     }
 
     @FXML
@@ -171,13 +163,10 @@ public class Main {
             return;
         }
 
-        Turma turma = TurmaGerenciador.getInstancia().getTurma(
-                turmaChave.split(" \\| ")[1],
-                turmaChave.split(" \\| ")[2],
-                turmaChave.split(" \\| ")[3]
-        );
+        String[] partes = turmaChave.split(" \\| ");
+        Turma turma = TurmaGerenciador.getInstancia().getTurma(partes[1], partes[2], partes[3]);
 
-        if (turma != null && turma.getAlunos().remove(aluno)) {
+        if (turma != null && turma.removerAluno(aluno)) {
             console.appendText("\nAluno removido!\n");
             selecionarAlunoTurma.getItems().remove(aluno);
         }
@@ -187,22 +176,22 @@ public class Main {
     private void listarAlunos() {
         String turmaChave = selecionarMapeamento.getValue();
 
-        if (turmaChave == null){
+        if (turmaChave == null) {
             return;
         }
 
-        Turma turma = TurmaGerenciador.getInstancia().getTurma(
-                turmaChave.split(" \\| ")[1],
-                turmaChave.split(" \\| ")[2],
-                turmaChave.split(" \\| ")[3]
-        );
+        String[] partes = turmaChave.split(" \\| ");
 
-        if (turma != null) {
-            console.appendText("\n=== Mapeamento da Turma: " + turma.getNome() + " ===\n");
-            for (String aluno : turma.getAlunos()) {
-                console.appendText(aluno + "\n");
+        if (partes.length >= 4) {
+            Turma turma = TurmaGerenciador.getInstancia().getTurma(partes[1], partes[2], partes[3]);
+
+            if (turma != null) {
+                console.appendText("\n=== Mapeamento da Turma: " + turma.getNome() + " ===\n");
+                for (String aluno : turma.getAlunos()) {
+                    console.appendText(aluno + "\n");
+                }
+                console.appendText("Total: " + turma.getAlunos().size() + "/" + Turma.LIMITE + "\n");
             }
-            console.appendText("Total: " + turma.getAlunos().size() + "/20\n");
         }
     }
 }

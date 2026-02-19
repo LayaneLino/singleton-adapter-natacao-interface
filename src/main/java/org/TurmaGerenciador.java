@@ -19,25 +19,24 @@ public class TurmaGerenciador {
         return instancia;
     }
 
-    public boolean cadastrarTurma(String nomeTurma, String dia, String horario, String nomePiscina) {
+    private String montarChaveInterna(String dia, String horario, String nomePiscina) {
+        return dia + " | " + horario + " | " + nomePiscina;
+    }
 
+    public boolean cadastrarTurma(String nomeTurma, String dia, String horario, String nomePiscina) {
         Piscina piscina = PiscinaGerenciador.getInstancia().getPiscina(nomePiscina);
 
-        String chave = dia + " | " + horario + " | " + nomePiscina;
+        if (piscina == null) return false;
 
-        if (turmas.containsKey(chave)) {
-            return false;
-        }
+        String chave = montarChaveInterna(dia, horario, nomePiscina);
+        if (turmas.containsKey(chave)) return false;
 
-        Turma turma = new Turma(nomeTurma, dia, horario, piscina);
-        turmas.put(chave, turma);
-
+        turmas.put(chave, new Turma(nomeTurma, dia, horario, piscina));
         return true;
     }
 
     public Turma getTurma(String dia, String horario, String nomePiscina) {
-        String chave = dia + " | " + horario + " | " + nomePiscina;
-        return turmas.get(chave);
+        return turmas.get(montarChaveInterna(dia, horario, nomePiscina));
     }
 
     public Map<String, Turma> getTurmas() {

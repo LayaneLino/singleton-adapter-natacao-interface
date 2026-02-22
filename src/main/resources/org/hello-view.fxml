@@ -1,64 +1,63 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.scene.control.Button?>
-<?import javafx.scene.control.ComboBox?>
-<?import javafx.scene.control.Label?>
-<?import javafx.scene.control.Separator?>
-<?import javafx.scene.control.TextArea?>
-<?import javafx.scene.control.TextField?>
-<?import javafx.scene.layout.HBox?>
-<?import javafx.scene.layout.VBox?>
-
-<VBox alignment="CENTER" prefHeight="700.0" prefWidth="500.0" spacing="15.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.Main">
-
-    <Label style="-fx-font-size: 22px;" text="Sistema de Mapeamento de Piscinas" />
-
-    <Label style="-fx-font-size: 16px;" text="Cadastro da Piscina" />
-    <TextField fx:id="nomePiscina" maxWidth="150.0" prefWidth="150.0" promptText="Nome da piscina" />
-    <HBox alignment="CENTER" spacing="10">
-        <Button onAction="#cadastrarPiscina" text="Adicionar Piscina" />
-        <Button onAction="#listarPiscinas" text="Listar Piscinas" />
-    </HBox>
-
-    <Separator />
-
-    <Label style="-fx-font-size: 16px;" text="Cadastro da Turma" />
-    <TextField fx:id="nomeTurma" maxWidth="150.0" prefWidth="150.0" promptText="Nome da Turma" />
-    <TextField fx:id="diaTurma" maxWidth="150.0" prefWidth="150.0" promptText="Dia(s) da Turma" />
-    <TextField fx:id="horarioTurma" maxWidth="150.0" prefWidth="150.0" promptText="Horário da Turma" />
-    <ComboBox fx:id="selecionarPiscina" promptText="Selecionar Piscina" />
-    <HBox alignment="CENTER" spacing="10">
-        <Button onAction="#cadastrarTurma" text="Adicionar Turma" />
-        <Button onAction="#listarTurmas" text="Listar Turmas" />
-    </HBox>
-
-    <Separator />
-
-    <Label style="-fx-font-size: 16px;" text="Mapear Aluno" />
-    <TextField fx:id="nomeAluno" maxWidth="150.0" prefWidth="150.0" promptText="Nome do aluno" />
-    <ComboBox fx:id="selecionarTurmaAluno" promptText="Selecionar Turma" />
-    <HBox alignment="CENTER" spacing="10">
-        <Button onAction="#adicionarAluno" text="Adicionar Aluno" />
-    </HBox>
-
-    <Separator />
-
-    <Label style="-fx-font-size: 16px;" text="Remover Aluno" />
-    <ComboBox fx:id="removerAlunoTurma" promptText="Selecionar Turma" />
-    <ComboBox fx:id="selecionarAlunoTurma" promptText="Selecionar Aluno" />
-    <HBox alignment="CENTER" spacing="10">
-        <Button onAction="#removerAluno" text="Remover Aluno" />
-    </HBox>
-
-    <Separator />
-
-    <Label style="-fx-font-size: 16px;" text="Mapeamento" />
-    <ComboBox fx:id="selecionarMapeamento" onAction="#listarAlunos" promptText="Selecionar Turma" />
-
-    <Separator />
-
-    <TextArea fx:id="console" editable="false" prefHeight="250" prefWidth="500" />
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
 
 
+<ScrollPane xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.MainController">
+    <VBox alignment="CENTER" prefHeight="700.0" prefWidth="500.0" spacing="15.0">
 
-</VBox>
+        <Label style="-fx-font-size: 22px;" text="Sistema de Mapeamento de Piscinas"/>
+
+        <Label style="-fx-font-size: 16px;" text="Cadastro da Piscina"/>
+        <TextField fx:id="nomePiscina" maxWidth="150.0" prefWidth="150.0" promptText="Nome da piscina"/>
+        <HBox alignment="CENTER" spacing="10">
+            <Button onAction="#cadastrarPiscina" text="Adicionar Piscina"/>
+            <Button onAction="#listarPiscinas" text="Listar Piscinas"/>
+        </HBox>
+
+        <Separator/>
+
+        <Label style="-fx-font-size: 16px;" text="Cadastro da Turma"/>
+        <TextField fx:id="nomeTurma" maxWidth="150.0" prefWidth="150.0" promptText="Nome da Turma"/>
+        <TextField fx:id="diaTurma" maxWidth="150.0" prefWidth="150.0" promptText="Dia(s) da Turma"/>
+        <TextField fx:id="horarioTurma" maxWidth="150.0" prefWidth="150.0" promptText="Horário da Turma"/>
+        <ComboBox fx:id="selecionarPiscina" promptText="Selecionar Piscina"/>
+        <HBox alignment="CENTER" spacing="10">
+            <Button onAction="#cadastrarTurma" text="Adicionar Turma"/>
+            <Button onAction="#listarTurmas" text="Listar Turmas"/>
+        </HBox>
+
+        <Separator/>
+
+        <Label style="-fx-font-size: 16px;" text="Mapear Aluno"/>
+        <TextField fx:id="nomeAluno" maxWidth="150.0" prefWidth="150.0" promptText="Nome do aluno"/>
+        <ComboBox fx:id="selecionarTurmaAluno" promptText="Selecionar Turma"/>
+        <HBox alignment="CENTER" spacing="10">
+            <Button onAction="#adicionarAluno" text="Adicionar Aluno"/>
+        </HBox>
+
+        <Separator/>
+
+        <Label style="-fx-font-size: 16px;" text="Remover Aluno"/>
+        <ComboBox fx:id="removerAlunoTurma" promptText="Selecionar Turma"/>
+        <ComboBox fx:id="selecionarAlunoTurma" promptText="Selecionar Aluno"/>
+        <HBox alignment="CENTER" spacing="10">
+            <Button onAction="#removerAluno" text="Remover Aluno"/>
+        </HBox>
+
+        <Separator/>
+
+        <Label style="-fx-font-size: 16px;" text="Mapeamento"/>
+        <ComboBox fx:id="selecionarMapeamento" onAction="#mostrarMapeamento" promptText="Selecionar Turma"/>
+
+        <Separator/>
+
+        <TextArea fx:id="console" editable="false" minHeight="150" prefWidth="500"/>
+
+        <Button onAction="#alterarOutput" text="Alterar output"/>
+
+        <Separator/>
+
+    </VBox>
+</ScrollPane>

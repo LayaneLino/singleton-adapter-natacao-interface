@@ -5,7 +5,7 @@ import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 
-public class Main {
+public class MainController {
 
     @FXML private TextField nomePiscina;
     @FXML private TextField nomeTurma;
@@ -21,9 +21,11 @@ public class Main {
     private final ObservableList<String> listaPiscinas = FXCollections.observableArrayList();
     private final ObservableList<String> listaTurmas = FXCollections.observableArrayList();
 
+    private GerenciadorLogs gerenciadorLogs;
+
     @FXML
     public void initialize() {
-
+        gerenciadorLogs =  new GerenciadorLogs(new ConsoleAdapter(console));
         selecionarPiscina.setItems(listaPiscinas);
         selecionarTurmaAluno.setItems(listaTurmas);
         removerAlunoTurma.setItems(listaTurmas);
@@ -43,9 +45,20 @@ public class Main {
         selecionarMapeamento.setOnMouseClicked(e -> {
             String turmaChave = selecionarMapeamento.getValue();
             if (turmaChave != null) {
-                listarAlunos();
+                mostrarMapeamento();
             }
         });
+    }
+
+    @FXML
+    private void alterarOutput() {
+        if (gerenciadorLogs.adaptador instanceof TxtAdapter) {
+            gerenciadorLogs = new GerenciadorLogs(new ConsoleAdapter(console));
+            console.appendText("Output alterado para console.\n");
+        } else {
+            gerenciadorLogs = new GerenciadorLogs(new TxtAdapter());
+            console.appendText("Output alterado para arquivo de texto.\n");
+        }
     }
 
     @FXML
@@ -53,18 +66,18 @@ public class Main {
         String nome = nomePiscina.getText().trim();
 
         if (nome.isEmpty()) {
-            console.appendText("\nPreencha todos os campos!\n");
+            gerenciadorLogs.exibeConsoleSalvaTxt("Preencha todos os campos!");
             return;
         }
 
         PiscinaGerenciador gerenciador = PiscinaGerenciador.getInstancia();
         if (gerenciador.getPiscina(nome) != null) {
-            console.appendText("\nPiscina já cadastrada!\n");
+            gerenciadorLogs.exibeConsoleSalvaTxt("Piscina " + nome + " já existe!");
             return;
         }
 
         PiscinaGerenciador.getInstancia().cadastrarPiscina(nome);
-        console.appendText("\nPiscina cadastrada: " + nome + "\n");
+        gerenciadorLogs.exibeConsoleSalvaTxt("Piscina cadastrada: " + nome);
 
         if (!listaPiscinas.contains(nome)){
             listaPiscinas.add(nome);
@@ -74,9 +87,9 @@ public class Main {
 
     @FXML
     private void listarPiscinas() {
-        console.appendText("\n=== Piscinas ===\n");
+        gerenciadorLogs.exibeConsoleSalvaTxt("=== Piscinas ===");
         for (String nome : listaPiscinas) {
-            console.appendText("- " + nome + "\n");
+            gerenciadorLogs.exibeConsoleSalvaTxt("- " + nome);
         }
     }
 
@@ -88,7 +101,7 @@ public class Main {
         String piscina = selecionarPiscina.getValue();
 
         if (nome.isEmpty() || dia.isEmpty() || horario.isEmpty() || piscina == null) {
-            console.appendText("\nPreencha todos os campos!\n");
+            gerenciadorLogs.exibeConsoleSalvaTxt("Preencha todos os campos!");
             return;
         }
 
@@ -98,8 +111,8 @@ public class Main {
             Turma turmaCriada = TurmaGerenciador.getInstancia().getTurma(dia, horario, piscina);
 
             if (turmaCriada != null) {
-                console.appendText("\nTurma cadastrada:\n");
-                console.appendText(turmaCriada + "\n");
+                gerenciadorLogs.exibeConsoleSalvaTxt("Turma cadastrada:");
+                gerenciadorLogs.exibeConsoleSalvaTxt("" + turmaCriada);
 
                 String chave = turmaCriada.gerarChaveCompleta();
                 if (!listaTurmas.contains(chave)) {
@@ -113,16 +126,16 @@ public class Main {
             selecionarPiscina.setValue(null);
 
         } else {
-            console.appendText("\nJá existe uma turma neste dia, horário e piscina!\n");
+            gerenciadorLogs.exibeConsoleSalvaTxt("Já existe uma turma em " + piscina + " no dia " + dia + " às " + horario + "!");
         }
 
     }
 
     @FXML
     private void listarTurmas() {
-        console.appendText("\n=== Turmas ===\n");
+        gerenciadorLogs.exibeConsoleSalvaTxt("=== Turmas ===");
         for (Turma turma : TurmaGerenciador.getInstancia().getTurmas().values()) {
-            console.appendText(turma.toString() + "\n");
+            gerenciadorLogs.exibeConsoleSalvaTxt(turma.toString());
         }
     }
 
@@ -132,7 +145,7 @@ public class Main {
         String turmaChave = selecionarTurmaAluno.getValue();
 
         if (aluno.isEmpty() || turmaChave == null) {
-            console.appendText("\nPreencha todos os campos!\n");
+            gerenciadorLogs.exibeConsoleSalvaTxt("Preencha todos os campos!");
             return;
         }
 
@@ -144,10 +157,10 @@ public class Main {
             if (turma != null) {
                 String resultado = turma.adicionarAluno(aluno);
                 if (resultado.equals("deu certo")) {
-                    console.appendText("\nAluno cadastrado!\n");
+                    gerenciadorLogs.exibeConsoleSalvaTxt("Aluno " + aluno + " cadastrado da turma " + turma.getNome() + ".");
                     nomeAluno.clear();
                 } else {
-                    console.appendText("\n" + resultado + "\n");
+                    gerenciadorLogs.exibeConsoleSalvaTxt(resultado);
                 }
             }
         }
@@ -159,7 +172,7 @@ public class Main {
         String aluno = selecionarAlunoTurma.getValue();
 
         if (turmaChave == null || aluno == null){
-            console.appendText("\nPreencha todos os campos!\n");
+            gerenciadorLogs.exibeConsoleSalvaTxt("Preencha todos os campos!");
             return;
         }
 
@@ -167,13 +180,13 @@ public class Main {
         Turma turma = TurmaGerenciador.getInstancia().getTurma(partes[1], partes[2], partes[3]);
 
         if (turma != null && turma.removerAluno(aluno)) {
-            console.appendText("\nAluno removido!\n");
+            gerenciadorLogs.exibeConsoleSalvaTxt("Aluno " + aluno + " removido da turma " + turma.getNome() + ".");
             selecionarAlunoTurma.getItems().remove(aluno);
         }
     }
 
     @FXML
-    private void listarAlunos() {
+    private void mostrarMapeamento() {
         String turmaChave = selecionarMapeamento.getValue();
 
         if (turmaChave == null) {
@@ -186,11 +199,11 @@ public class Main {
             Turma turma = TurmaGerenciador.getInstancia().getTurma(partes[1], partes[2], partes[3]);
 
             if (turma != null) {
-                console.appendText("\n=== Mapeamento da Turma: " + turma.getNome() + " ===\n");
+                gerenciadorLogs.exibeConsoleSalvaTxt("=== Mapeamento da Turma: " + turma.getNome() + " ===");
                 for (String aluno : turma.getAlunos()) {
-                    console.appendText(aluno + "\n");
+                    gerenciadorLogs.exibeConsoleSalvaTxt(aluno);
                 }
-                console.appendText("Total: " + turma.getAlunos().size() + "/" + Turma.LIMITE + "\n");
+                gerenciadorLogs.exibeConsoleSalvaTxt("Total: " + turma.getAlunos().size() + "/" + Turma.limite);
             }
         }
     }

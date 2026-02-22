@@ -10,7 +10,7 @@ public class Turma {
     private final String horario;
     private final Piscina piscina;
     private List<String> alunos;
-    public static final int LIMITE = 20;
+    public static final int limite = 20;
 
     public Turma(String nome, String dia, String horario, Piscina piscina) {
         this.nome = nome;
@@ -24,18 +24,6 @@ public class Turma {
         return nome;
     }
 
-    public String getDia() {
-        return dia;
-    }
-
-    public String getHorario() {
-        return horario;
-    }
-
-    public Piscina getPiscina() {
-        return piscina;
-    }
-
     public List<String> getAlunos() {
         return alunos;
     }
@@ -43,10 +31,10 @@ public class Turma {
     public String adicionarAluno(String aluno) {
 
         if (alunos.contains(aluno)) {
-            return "Aluno já cadastrado nesta turma!";
+            return "Aluno " + aluno + " já cadastrado na turma " + nome + "!";
         }
 
-        if (alunos.size() >= LIMITE) {
+        if (alunos.size() >= limite) {
             return "Turma cheia! Máximo de 20 alunos.";
         }
 

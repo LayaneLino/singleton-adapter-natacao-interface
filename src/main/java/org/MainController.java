@@ -52,12 +52,13 @@ public class MainController {
 
     @FXML
     private void alterarOutput() {
-        if (gerenciadorLogs.adaptador instanceof TxtAdapter) {
+        if (gerenciadorLogs.getAdaptador() instanceof TxtAdapter) {
             gerenciadorLogs = new GerenciadorLogs(new ConsoleAdapter(console));
-            console.appendText("Output alterado para console.\n");
+            gerenciadorLogs.registrar("Output alterado para console.");
         } else {
             gerenciadorLogs = new GerenciadorLogs(new TxtAdapter());
             console.appendText("Output alterado para arquivo de texto.\n");
+            gerenciadorLogs.registrar("Output alterado para arquivo de texto.");
         }
     }
 
@@ -66,18 +67,18 @@ public class MainController {
         String nome = nomePiscina.getText().trim();
 
         if (nome.isEmpty()) {
-            gerenciadorLogs.exibeConsoleSalvaTxt("Preencha todos os campos!");
+            gerenciadorLogs.registrar("Preencha todos os campos!");
             return;
         }
 
         PiscinaGerenciador gerenciador = PiscinaGerenciador.getInstancia();
         if (gerenciador.getPiscina(nome) != null) {
-            gerenciadorLogs.exibeConsoleSalvaTxt("Piscina " + nome + " já existe!");
+            gerenciadorLogs.registrar("Piscina " + nome + " já existe!");
             return;
         }
 
         PiscinaGerenciador.getInstancia().cadastrarPiscina(nome);
-        gerenciadorLogs.exibeConsoleSalvaTxt("Piscina cadastrada: " + nome);
+        gerenciadorLogs.registrar("Piscina cadastrada: " + nome);
 
         if (!listaPiscinas.contains(nome)){
             listaPiscinas.add(nome);
@@ -87,9 +88,9 @@ public class MainController {
 
     @FXML
     private void listarPiscinas() {
-        gerenciadorLogs.exibeConsoleSalvaTxt("=== Piscinas ===");
+        gerenciadorLogs.registrar("=== Piscinas ===");
         for (String nome : listaPiscinas) {
-            gerenciadorLogs.exibeConsoleSalvaTxt("- " + nome);
+            gerenciadorLogs.registrar("- " + nome);
         }
     }
 
@@ -101,7 +102,7 @@ public class MainController {
         String piscina = selecionarPiscina.getValue();
 
         if (nome.isEmpty() || dia.isEmpty() || horario.isEmpty() || piscina == null) {
-            gerenciadorLogs.exibeConsoleSalvaTxt("Preencha todos os campos!");
+            gerenciadorLogs.registrar("Preencha todos os campos!");
             return;
         }
 
@@ -111,8 +112,8 @@ public class MainController {
             Turma turmaCriada = TurmaGerenciador.getInstancia().getTurma(dia, horario, piscina);
 
             if (turmaCriada != null) {
-                gerenciadorLogs.exibeConsoleSalvaTxt("Turma cadastrada:");
-                gerenciadorLogs.exibeConsoleSalvaTxt("" + turmaCriada);
+                gerenciadorLogs.registrar("Turma cadastrada:");
+                gerenciadorLogs.registrar("" + turmaCriada);
 
                 String chave = turmaCriada.gerarChaveCompleta();
                 if (!listaTurmas.contains(chave)) {
@@ -126,16 +127,16 @@ public class MainController {
             selecionarPiscina.setValue(null);
 
         } else {
-            gerenciadorLogs.exibeConsoleSalvaTxt("Já existe uma turma em " + piscina + " no dia " + dia + " às " + horario + "!");
+            gerenciadorLogs.registrar("Já existe uma turma em " + piscina + " no dia " + dia + " às " + horario + "!");
         }
 
     }
 
     @FXML
     private void listarTurmas() {
-        gerenciadorLogs.exibeConsoleSalvaTxt("=== Turmas ===");
+        gerenciadorLogs.registrar("=== Turmas ===");
         for (Turma turma : TurmaGerenciador.getInstancia().getTurmas().values()) {
-            gerenciadorLogs.exibeConsoleSalvaTxt(turma.toString());
+            gerenciadorLogs.registrar(turma.toString());
         }
     }
 
@@ -145,7 +146,7 @@ public class MainController {
         String turmaChave = selecionarTurmaAluno.getValue();
 
         if (aluno.isEmpty() || turmaChave == null) {
-            gerenciadorLogs.exibeConsoleSalvaTxt("Preencha todos os campos!");
+            gerenciadorLogs.registrar("Preencha todos os campos!");
             return;
         }
 
@@ -157,10 +158,10 @@ public class MainController {
             if (turma != null) {
                 String resultado = turma.adicionarAluno(aluno);
                 if (resultado.equals("deu certo")) {
-                    gerenciadorLogs.exibeConsoleSalvaTxt("Aluno " + aluno + " cadastrado da turma " + turma.getNome() + ".");
+                    gerenciadorLogs.registrar("Aluno " + aluno + " cadastrado da turma " + turma.getNome() + ".");
                     nomeAluno.clear();
                 } else {
-                    gerenciadorLogs.exibeConsoleSalvaTxt(resultado);
+                    gerenciadorLogs.registrar(resultado);
                 }
             }
         }
@@ -172,7 +173,7 @@ public class MainController {
         String aluno = selecionarAlunoTurma.getValue();
 
         if (turmaChave == null || aluno == null){
-            gerenciadorLogs.exibeConsoleSalvaTxt("Preencha todos os campos!");
+            gerenciadorLogs.registrar("Preencha todos os campos!");
             return;
         }
 
@@ -180,7 +181,7 @@ public class MainController {
         Turma turma = TurmaGerenciador.getInstancia().getTurma(partes[1], partes[2], partes[3]);
 
         if (turma != null && turma.removerAluno(aluno)) {
-            gerenciadorLogs.exibeConsoleSalvaTxt("Aluno " + aluno + " removido da turma " + turma.getNome() + ".");
+            gerenciadorLogs.registrar("Aluno " + aluno + " removido da turma " + turma.getNome() + ".");
             selecionarAlunoTurma.getItems().remove(aluno);
         }
     }
@@ -199,11 +200,11 @@ public class MainController {
             Turma turma = TurmaGerenciador.getInstancia().getTurma(partes[1], partes[2], partes[3]);
 
             if (turma != null) {
-                gerenciadorLogs.exibeConsoleSalvaTxt("=== Mapeamento da Turma: " + turma.getNome() + " ===");
+                gerenciadorLogs.registrar("=== Mapeamento da Turma: " + turma.getNome() + " ===");
                 for (String aluno : turma.getAlunos()) {
-                    gerenciadorLogs.exibeConsoleSalvaTxt(aluno);
+                    gerenciadorLogs.registrar(aluno);
                 }
-                gerenciadorLogs.exibeConsoleSalvaTxt("Total: " + turma.getAlunos().size() + "/" + Turma.limite);
+                gerenciadorLogs.registrar("Total: " + turma.getAlunos().size() + "/" + Turma.limite);
             }
         }
     }

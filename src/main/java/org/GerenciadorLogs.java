@@ -1,13 +1,18 @@
 package org;
 
 public class GerenciadorLogs {
-    public ISalvarMensagens adaptador;
+    private final ISalvarMensagens adaptador;
 
-    GerenciadorLogs(ISalvarMensagens salvador) {
-        this.adaptador = salvador;
+    GerenciadorLogs(ISalvarMensagens adaptador) {
+        this.adaptador = adaptador;
     }
 
-    public void exibeConsoleSalvaTxt(String mensagem) {
+    public void registrar(String mensagem) {
         adaptador.salvar(mensagem);
     }
+
+    public ISalvarMensagens getAdaptador() {
+        return adaptador;
+    }
+
 }

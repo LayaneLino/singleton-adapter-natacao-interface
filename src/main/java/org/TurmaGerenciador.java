@@ -26,10 +26,14 @@ public class TurmaGerenciador {
     public boolean cadastrarTurma(String nomeTurma, String dia, String horario, String nomePiscina) {
         Piscina piscina = PiscinaGerenciador.getInstancia().getPiscina(nomePiscina);
 
-        if (piscina == null) return false;
+        if (piscina == null){
+            return false;
+        }
 
         String chave = montarChaveInterna(dia, horario, nomePiscina);
-        if (turmas.containsKey(chave)) return false;
+        if (turmas.containsKey(chave)){
+            return false;
+        }
 
         turmas.put(chave, new Turma(nomeTurma, dia, horario, piscina));
         return true;

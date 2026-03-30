@@ -4,7 +4,7 @@
 <?import javafx.scene.layout.*?>
 
 
-<ScrollPane xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.MainController">
+<ScrollPane xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.controller.MainController">
     <VBox alignment="CENTER" prefHeight="700.0" prefWidth="500.0" spacing="15.0">
 
         <Label style="-fx-font-size: 22px;" text="Sistema de Mapeamento de Piscinas"/>

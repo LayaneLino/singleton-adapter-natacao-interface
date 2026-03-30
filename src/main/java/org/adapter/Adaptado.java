@@ -1,4 +1,4 @@
-package org;
+package org.adapter;
 
 import java.io.FileWriter;
 import java.io.IOException;

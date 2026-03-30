@@ -1,9 +1,9 @@
-package org;
+package org.adapter;
 
 public class GerenciadorLogs {
     private final ISalvarMensagens adaptador;
 
-    GerenciadorLogs(ISalvarMensagens adaptador) {
+    public GerenciadorLogs(ISalvarMensagens adaptador) {
         this.adaptador = adaptador;
     }
 

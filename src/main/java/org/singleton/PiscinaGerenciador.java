@@ -1,4 +1,6 @@
-package org;
+package org.singleton;
+
+import org.entity.Piscina;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -6,7 +8,7 @@ import java.util.Map;
 public class PiscinaGerenciador {
 
     private static PiscinaGerenciador instancia;
-    private Map<String, Piscina> piscinas;
+    private final Map<String, Piscina> piscinas;
 
     private PiscinaGerenciador() {
         piscinas = new HashMap<>();

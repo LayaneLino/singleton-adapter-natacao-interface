@@ -1,4 +1,4 @@
-package org;
+package org.adapter;
 
 import javafx.scene.control.TextArea;
 

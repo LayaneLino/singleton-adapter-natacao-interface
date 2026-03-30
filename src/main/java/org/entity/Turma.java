@@ -1,4 +1,4 @@
-package org;
+package org.entity;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -9,7 +9,7 @@ public class Turma {
     private final String dia;
     private final String horario;
     private final Piscina piscina;
-    private List<String> alunos;
+    private final List<String> alunos;
     public static final int limite = 20;
 
     public Turma(String nome, String dia, String horario, Piscina piscina) {

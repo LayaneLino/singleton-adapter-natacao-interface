@@ -1,8 +1,8 @@
-package org;
+package org.entity;
 
 public class Piscina {
 
-    private String nome;
+    private final String nome;
 
     public Piscina(String nome) {
         this.nome = nome;

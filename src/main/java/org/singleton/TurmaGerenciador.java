@@ -1,4 +1,7 @@
-package org;
+package org.singleton;
+
+import org.entity.Piscina;
+import org.entity.Turma;
 
 import java.util.HashMap;
 import java.util.Map;

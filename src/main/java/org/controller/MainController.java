@@ -1,9 +1,15 @@
-package org;
+package org.controller;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
+import org.adapter.ConsoleAdapter;
+import org.adapter.GerenciadorLogs;
+import org.adapter.TxtAdapter;
+import org.entity.Turma;
+import org.singleton.PiscinaGerenciador;
+import org.singleton.TurmaGerenciador;
 
 public class MainController {
 
